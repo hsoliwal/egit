@@ -1,0 +1,8 @@
+# view_id	paths
+org.eclipse.egit.ui.StagingView	org.eclipse.egit.ui/src/org/eclipse/egit/ui/internal/staging
+egit-history(GitHistoryPage)	org.eclipse.egit.ui/src/org/eclipse/egit/ui/internal/history
+org.eclipse.egit.ui.RepositoriesView	org.eclipse.egit.ui/src/org/eclipse/egit/ui/internal/repository
+egit-synchronize	org.eclipse.egit.ui/src/org/eclipse/egit/ui/internal/synchronize
+org.eclipse.egit.ui.ReflogView	org.eclipse.egit.ui/src/org/eclipse/egit/ui/internal/reflog
+org.eclipse.egit.ui.InteractiveRebaseView	org.eclipse.egit.ui/src/org/eclipse/egit/ui/internal/rebase
+org.eclipse.egit.ui.CompareTreeView	org.eclipse.egit.ui/src/org/eclipse/egit/ui/internal/dialogs/CompareTreeView.java

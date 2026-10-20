@@ -1,0 +1,10 @@
+repo	module	pattern	main	test
+egit	org.eclipse.egit.ui	jface_setInput	95	0
+egit	org.eclipse.egit.ui	jface_refresh_all	77	0
+egit	org.eclipse.egit.ui	swt_removeAll	7	0
+egit	org.eclipse.egit.ui	swt_clearAll	4	0
+egit	org.eclipse.egit.core	jface_refresh_all	3	0
+egit	org.eclipse.egit.gitflow.ui	jface_refresh_all	1	0
+egit	org.eclipse.egit.gitflow.ui	jface_setInput	1	0
+egit	org.eclipse.egit.core.test	jface_refresh_all	0	7
+egit	org.eclipse.egit.ui.test	jface_refresh_all	0	9
