@@ -17,6 +17,14 @@ concurrency:
 env:
   JGIT_COMMIT: 4ceb7bf5407477a7d6c34933af1120a7f838d36d
   REPORT_VALIDATOR_COMMIT: 1202ab304c3b81b73b628d201b987941d16c94d2
+  # Tycho 5.0.4 (egit and the pinned JGit) injects nested Bundle-ClassPath jars as
+  # system dependencies whose classifier contains '/'. Maven 3.10.x (Resolver 2.x,
+  # the ubuntu-24.04 image default) rejects them with "Invalid Collect Request",
+  # which broke cyclonedx:makeAggregateBom on org.eclipse.egit.ui.test
+  # (eclipse-tycho/tycho#6399, not yet in a Tycho release). Build with the
+  # latest Maven 3.9.x until tycho-version contains that fix.
+  MAVEN_VERSION: 3.9.16
+  MAVEN_SHA512: 831a8591fe20c8243b1dbe7d71e3244f31d1665b0804b2e825e38cbbe5ce0cafb8338851f90780735568773e0a6cd07bbec107cda0b896b008b861075358b6f6
 
 jobs:
   verify:
@@ -53,6 +61,16 @@ jobs:
           cache-dependency-path: |
             egit/**/pom.xml
             jgit/**/pom.xml
+      - name: Set up Maven ${{ env.MAVEN_VERSION }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          archive="$RUNNER_TEMP/apache-maven-$MAVEN_VERSION-bin.tar.gz"
+          curl --fail --silent --show-error --location --retry 3 --output "$archive" "https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/$MAVEN_VERSION/apache-maven-$MAVEN_VERSION-bin.tar.gz"
+          echo "$MAVEN_SHA512  $archive" | sha512sum --check --strict
+          tar -xzf "$archive" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/apache-maven-$MAVEN_VERSION/bin" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/apache-maven-$MAVEN_VERSION/bin/mvn" --version
       - name: Record exact source inputs
         shell: bash
         run: |
@@ -71,6 +89,7 @@ jobs:
           sha256sum release-validator/tools/release/readiness.py \
             > "$RUNNER_TEMP/egit-source-inputs/REPORT_VALIDATOR_SHA256"
           mvn --version > "$RUNNER_TEMP/egit-source-inputs/MAVEN_VERSION"
+          grep -F "Apache Maven $MAVEN_VERSION " "$RUNNER_TEMP/egit-source-inputs/MAVEN_VERSION"
           java -version 2> "$RUNNER_TEMP/egit-source-inputs/JAVA_VERSION"
       - name: Install GTK test dependencies
         run: |
